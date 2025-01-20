@@ -13,7 +13,7 @@ export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     initialMessages: [
       {
-        id: 'dummy',
+        id: '0',
         role: 'system',
         content: `Act as a specialized assistant named Franky for a demonstration at Mellenger. Keep things simple and friendly.`,
       }
@@ -26,7 +26,7 @@ export default function Chat() {
   }, [messages]);
 
   // Define color mappings
-  const colors: ColorMappings = {
+  const colorMap: ColorMappings = {
     'user': {
       text: 'text-cyan-200',
       border: 'border-cyan-700',
@@ -48,21 +48,35 @@ export default function Chat() {
   return (
     <div className="flex flex-1 flex-col w-full max-w-lg pt-8 mx-auto h-[100vh]">
       <div className="flex-1 overflow-y-auto pb-4">
-        {messages.map(m => (
-          <div
-            key={m.id}
-            className={`
-              whitespace-pre-wrap
-              p-4
-              my-2
-              rounded-md
-              border
-              ${Object.values(colors[m.role]).join(' ')}`}
-          >
-            {m.role + `: `}
-            {m.content}
-          </div>
-        ))}
+        {messages.map(m => {
+          const colors = Object.values(colorMap[m.role]).join(' ')
+
+          return (
+            <div
+              key={m.id}
+              className={`
+                whitespace-pre-wrap
+                p-4
+                my-2
+                rounded-md
+                border
+                ${colors}
+              `}>
+              <span className={`
+                px-2 py-1
+                mr-2
+                rounded
+                border
+                font-bold
+                shadow-lg
+                ${colors}
+            `}>
+                {m.role}
+              </span>
+              {m.content}
+            </div>
+          )
+        })}
       </div>
 
       <form
