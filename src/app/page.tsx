@@ -1,5 +1,6 @@
 'use client';
 
+import { Weather, WeatherAtLocation } from '@/components/weather';
 import { Message, useChat } from 'ai/react';
 import { useEffect } from 'react';
 
@@ -15,7 +16,7 @@ export default function Chat() {
       {
         id: '0',
         role: 'system',
-        content: `Act as a specialized assistant named Franky for a demonstration at Mellenger. Keep things simple and friendly.`,
+        content: `Act as a specialized assistant named Franky for a demonstration at Mellenger. Keep it simple, friendly, and throw in lots of emojis.`,
       }
     ]
   });
@@ -48,12 +49,29 @@ export default function Chat() {
   return (
     <div className="flex flex-1 flex-col w-full max-w-lg pt-8 mx-auto h-[100vh]">
       <div className="flex-1 overflow-y-auto pb-4">
-        {messages.map(m => {
-          const colors = Object.values(colorMap[m.role]).join(' ')
+        {messages.map(message => {
 
+          // If the message has a tool invocation attached
+          if (
+            message.toolInvocations &&
+            message.toolInvocations.length > 0 &&
+            // Verify that it is a result
+            message.toolInvocations[0].state === 'result') {
+
+            // Return the weather component
+            return <Weather
+              key={message.id}
+              weatherAtLocation={message.toolInvocations[0].result as WeatherAtLocation}
+            />
+          }
+
+          // Otherwise, pick the right color to decorate the message
+          const colors = Object.values(colorMap[message.role]).join(' ')
+
+          // Decorate and return
           return (
             <div
-              key={m.id}
+              key={message.id}
               className={`
                 whitespace-pre-wrap
                 p-4
@@ -71,9 +89,9 @@ export default function Chat() {
                 shadow-lg
                 ${colors}
             `}>
-                {m.role}
+                {message.role}
               </span>
-              {m.content}
+              {message.content}
             </div>
           )
         })}
