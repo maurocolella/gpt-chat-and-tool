@@ -16,7 +16,7 @@ export default function Chat() {
       {
         id: '0',
         role: 'system',
-        content: `Act as a specialized assistant named Franky for a demonstration at Mellenger. Keep it simple, friendly, and throw in lots of emojis.`,
+        content: `Act as a specialized assistant named Franky for a demonstration at Mellenger. Keep it simple and friendly.`,
       }
     ]
   });
